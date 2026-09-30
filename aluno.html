@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plataforma UNIFEI para Alunos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --fg:#152033; --muted:#5b6678; --line:#d9dfe8;
+  --accent:#1b4f9c; --accent-fg:#ffffff; --warn:#a4560a; --ok:#1d7a4d;
+  --display:"Source Serif 4",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1622; --surface:#172131; --fg:#e6ebf3; --muted:#9aa6ba; --line:#2a374d;
+  --accent:#7fb0f0; --accent-fg:#0b1422; --warn:#e9a55c; --ok:#5fcf98; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);padding-inline:16px;padding-block:24px 56px}
+main{max-width:720px;margin:0 auto}
+h1{font:700 1.8rem/1.15 var(--display);margin:8px 0 6px;text-wrap:balance}
+h2{font:700 1.3rem/1.25 var(--display);margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 18px;max-width:62ch}
+.tag{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 18px;margin-bottom:14px}
+.prog{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 10px;margin:0 0 6px}
+.prog .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.prog small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.item{padding:14px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0;padding-top:4px}
+.item legend,.item>label{display:block;font-size:1.1rem;line-height:1.4;font-weight:600;margin-bottom:10px;padding:0}
+.qtxt{display:block;font-size:1.15rem;line-height:1.4;font-weight:600;margin:0 0 10px;padding:0}
+select,textarea{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+textarea{min-height:72px;resize:vertical}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.scale{display:flex;gap:6px;flex-wrap:wrap}
+.scale input{position:absolute;opacity:0;pointer-events:none}
+.scale label{min-width:50px;font-size:1.05rem;text-align:center;padding:10px 14px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--bg)}
+.scale.wide label{padding:9px 14px}
+.scale input:checked+label{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.scale input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.ends{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-top:5px;gap:8px;max-width:290px}
+.hint{font-size:.88rem;color:var(--muted);margin:0 0 6px}
+/* telas da plataforma */
+.area h2{display:flex;gap:8px;align-items:baseline}
+.area .n{font:600 .75rem var(--body);color:var(--muted);letter-spacing:.06em}
+.area p.cap{margin:0 0 14px;color:var(--fg);opacity:.85;font-size:1rem}
+.shot{margin:0 0 12px}
+.shot img{display:block;width:100%;height:auto;max-height:340px;object-fit:contain;object-position:top;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:zoom-in}
+.shot.noimg{display:none}
+.shot small{display:block;color:var(--muted);font-size:.75rem;margin-top:4px}
+.zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:16px;z-index:20;cursor:zoom-out}
+.zoom.on{display:flex}
+.zoom img{max-width:100%;max-height:100%;border-radius:6px}
+details.more{border:1px dashed var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+details.more summary{cursor:pointer;font-weight:600}
+button{font:600 .95rem var(--body);padding:11px 22px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.err{color:var(--warn);font-size:.9rem;margin:10px 0 0;min-height:1.2em}
+.done{text-align:center;padding:20px 18px}
+.done h2{color:var(--ok)}
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">TCC · Plataforma UNIFEI</span>
+  <h1>Veja a plataforma e diga se ajudaria você</h1>
+  <p class="lead">Você não precisa usar o site. Veja as telas abaixo, leia a explicação de cada uma e toque na nota. Leva cerca de 2 minutos, sem conta e sem informar o nome.</p>
+  <div class="prog" id="prog"><div class="bar"><i id="pbar"></i></div><small id="ptxt"></small></div>
+  <form id="f" novalidate></form>
+</main>
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<script>
+/* Endereço do Google Apps Script (ver LEIA-ME.md). */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbw84dRhGo_nULZ6r1hRCBWexRJxE-FzFyx4E6bxVwEBiha1kkWRzpiMfaM8wrl9wQXOWA/exec";
+
+/* Uma tela por componente. As imagens ficam em img/; sem a imagem, a tela aparece só com o texto. */
+const AREAS=[
+ ["cp1","Fórum por disciplina","Você pergunta e colegas, monitores e professores respondem. A melhor resposta fica marcada e o que já foi resolvido fica guardado para a turma toda.","img/forum.jpg","Tela do fórum de uma disciplina"],
+ ["cp2","Pedido de ajuda ao monitor","Dentro do chat do grupo, você marca uma mensagem e descreve a dúvida. Só esse recorte chega ao monitor da disciplina (ou ao professor, se não houver monitoria), e o resto da conversa continua privado.","img/pedido-ajuda.jpg|img/pedido-ajuda.svg","Pedido de ajuda e esquema do fluxo"],
+ ["cp3","Busca de dúvidas parecidas","Antes de perguntar, a busca mostra se alguém já publicou uma dúvida com palavras parecidas com as suas, para você não repetir a pergunta.","img/busca.jpg","Tela de busca do fórum"],
+ ["cp4","Chat privado do grupo","Cada grupo de trabalho tem a sua conversa, com texto, áudio e anexos, e só os integrantes do grupo a veem. O professor e os outros grupos não leem nada, e quem já está em um grupo não entra em outro.","img/grupo-chat.jpg|img/trabalhos-lista.jpg","Conversa do grupo e lista de grupos do trabalho"],
+ ["cp5","Acervo de arquivos","Os arquivos dos trabalhos ficam reunidos em um só lugar, e cada um só aparece para quem tem permissão.","",""],
+ ["cp6","Notificações","Aviso na hora quando alguém responde sua dúvida ou quando algo precisa da sua atenção.","img/notificacoes.jpg","Tela de notificações"],
+ ["cp7","Oportunidades de voluntariado","Vagas de ONGs e projetos, com inscrição e acompanhamento das suas horas pela plataforma.","img/voluntariado.jpg","Tela de oportunidades de voluntariado"],
+ ["cp8","Certificado com código de validação","Ao concluir, você recebe um certificado em PDF que qualquer pessoa pode conferir pelo código.","img/certificados.jpg","Tela de certificado"]
+];
+const AGREGA=[
+ ["ag1","Ter as dúvidas da disciplina em um só lugar me ajudaria a estudar."],
+ ["ag2","Ver respostas de colegas, monitores e professores me ajudaria a aprender."],
+ ["ag3","Achar uma dúvida parecida já respondida me faria economizar tempo."],
+ ["ag4","Pedir ajuda ao monitor pela plataforma é melhor do que por WhatsApp."],
+ ["ag5","Um espaço privado para o meu grupo de trabalho seria útil."],
+ ["ag6","Fazer voluntariado e receber certificado pela plataforma me motivaria."]
+];
+const COMPREENSAO=[["us1","Entendi para que serve a plataforma."],["us2","As telas parecem fáceis de usar."]];
+const CURSOS=["Ciência da Computação","Engenharia de Computação","Sistemas de Informação","Engenharia Elétrica","Engenharia Mecânica","Engenharia de Produção","Engenharia Civil","Engenharia Ambiental","Engenharia Hídrica","Engenharia Química","Engenharia de Materiais","Engenharia de Controle e Automação","Engenharia de Energia","Física","Matemática","Química","Outro"];
+const PERIODOS=["1º","2º","3º","4º","5º","6º","7º","8º","9º","10º ou mais"];
+const CANAIS=["Grupo de WhatsApp da turma","Perguntando ao professor","Perguntando ao monitor","Perguntando a colegas","Pesquisando na internet","Outro"];
+const UTIL=["Fórum por disciplina","Busca de dúvidas parecidas","Pedidos de ajuda ao monitor","Chat privado do grupo","Acervo de arquivos","Notificações","Voluntariado e certificado"];
+const USO=["Usaria","Talvez usaria","Não usaria"];
+const OBRIG=[...AREAS.map(a=>a[0]),...COMPREENSAO.map(a=>a[0])];
+const $=s=>document.querySelector(s);
+function esc(s){const d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML}
+function scale(name,vals,cls){return `<div class="scale ${cls||""}">`+vals.map((v,i)=>`<input type="radio" name="${name}" id="${name}_${i}" value="${esc(v)}"><label for="${name}_${i}">${esc(v)}</label>`).join("")+"</div>"}
+function options(list){return '<option value="">Selecione</option>'+list.map(o=>`<option>${esc(o)}</option>`).join("")}
+
+function render(){
+  let h=`<div class="card"><h2>Antes de começar</h2>
+  <div class="item"><label for="curso">Curso</label><select id="curso">${options(CURSOS)}</select></div>
+  <div class="item"><label for="periodo">Período</label><select id="periodo">${options(PERIODOS)}</select></div>
+  <div class="item"><label for="canal">Hoje, como você costuma tirar dúvidas de uma disciplina?</label><select id="canal">${options(CANAIS)}</select></div></div>`;
+  AREAS.forEach(([k,t,cap,img,alt],i)=>{
+    h+=`<div class="card area"><h2><span class="n">${i+1}/${AREAS.length}</span>${t}</h2>
+    ${img?img.split("|").map(u=>`<figure class="shot"><img src="${u}" alt="${esc(alt)}"><small>Toque na imagem para ampliar</small></figure>`).join(""):""}
+    <p class="cap">${cap}</p>
+    <fieldset><legend class="qtxt">Quanto isso ajudaria você?</legend>${scale(k,[1,2,3,4,5])}
+    <div class="ends"><span>1 = nada</span><span>5 = muito</span></div></fieldset></div>`;
+  });
+  h+=`<div class="card"><h2>Sua impressão</h2><p class="hint">1 = discordo totalmente · 5 = concordo totalmente</p>`;
+  COMPREENSAO.forEach(([k,t])=>{h+=`<fieldset class="item"><legend>${t}</legend>${scale(k,[1,2,3,4,5])}</fieldset>`});
+  h+=`<div class="item"><label for="util">Qual parte seria a mais útil para você?</label><select id="util">${options(UTIL)}</select></div>
+  <fieldset class="item"><legend>Você usaria esta plataforma nas suas disciplinas?</legend>${scale("uso",USO,"wide")}</fieldset>
+  <div class="item"><label for="coment">Falta alguma coisa ou algo não ficou claro? (opcional)</label><textarea id="coment"></textarea></div></div>
+  <details class="more"><summary>Quer detalhar mais? (opcional)</summary><p class="hint" style="margin-top:10px">1 = discordo totalmente · 5 = concordo totalmente</p>`;
+  AGREGA.forEach(([k,t])=>{h+=`<fieldset class="item"><legend>${t}</legend>${scale(k,[1,2,3,4,5])}</fieldset>`});
+  h+=`</details>
+  <div class="card" id="autoriza"><label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer"><input type="checkbox" id="consent" style="margin-top:5px;width:20px;height:20px;flex:none"><span><b>Autorizo o uso das informações que respondi</b> nesta pesquisa, apenas no Trabalho de Conclusão de Curso e de forma agregada e anônima. <b style="color:var(--warn)">(obrigatório para enviar)</b></span></label><p class="hint" style="margin:10px 0 0">O botão Enviar só é habilitado depois que você marcar esta autorização.</p></div>
+  <div class="err" id="err" role="alert"></div><button type="button" id="send">Enviar</button>`;
+  $("#f").innerHTML=h;
+  $("#send").onclick=submit;
+  {const c=$("#consent"),b=$("#send");b.disabled=!c.checked;c.addEventListener("change",()=>{b.disabled=!c.checked;$("#autoriza").style.borderColor=c.checked?"":"var(--warn)"})}
+  document.querySelectorAll(".shot img").forEach(im=>{
+    im.addEventListener("error",()=>im.closest(".shot").classList.add("noimg"));
+    im.addEventListener("click",()=>{const z=$("#zoom");z.querySelector("img").src=im.src;z.classList.add("on")});
+  });
+  $("#f").addEventListener("change",progresso);progresso();
+}
+$("#zoom").onclick=()=>$("#zoom").classList.remove("on");
+const val=n=>{const c=document.querySelector(`[name="${n}"]:checked`);return c?c.value:""};
+function progresso(){
+  let ok=0,tot=OBRIG.length+5;
+  OBRIG.forEach(k=>{if(val(k))ok++});
+  ["curso","periodo","canal","util"].forEach(id=>{if($("#"+id).value)ok++});
+  if(val("uso"))ok++;
+  $("#pbar").style.width=Math.round(ok/tot*100)+"%";
+  $("#ptxt").textContent=ok>=tot?"Tudo respondido. Falta só enviar.":`Faltam ${tot-ok} respostas`;
+}
+
+async function submit(){
+  const p={formulario:"alunos",enviado_em:new Date().toISOString(),curso:$("#curso").value,periodo:$("#periodo").value,canal_duvidas:$("#canal").value};
+  [...AREAS.map(a=>a[0]),...COMPREENSAO.map(a=>a[0]),...AGREGA.map(a=>a[0])].forEach(k=>p[k]=val(k));
+  p.mais_util=$("#util").value;p.uso=val("uso");p.falta="";p.comentario=$("#coment").value.trim();
+  if(!p.curso||!p.periodo||!p.canal_duvidas||!p.mais_util||!p.uso||OBRIG.some(k=>!p[k])){$("#err").textContent="Falta responder alguma pergunta. Os campos de texto e a parte \"Quer detalhar mais?\" são opcionais.";return}
+  if(!$("#consent").checked){$("#err").textContent="Marque a autorização de uso das informações para enviar.";$("#autoriza").style.borderColor="var(--warn)";return}
+  const b=$("#send");b.disabled=true;$("#err").textContent="";
+  try{
+    await fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)});
+    $("#prog").hidden=true;
+    $("#f").innerHTML='<div class="card done"><h2>Resposta enviada</h2><p class="lead" style="margin:6px auto 0">Obrigada por ajudar com o TCC.</p></div>';
+    scrollTo(0,0);
+  }catch(e){b.disabled=false;$("#err").textContent="Não foi possível enviar agora. Confira sua conexão e tente de novo."}
+}
+render();
+</script>
+</body>
+</html>
